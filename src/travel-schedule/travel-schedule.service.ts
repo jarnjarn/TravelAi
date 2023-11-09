@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTravelScheduleDto } from './dto/create-travel-schedule.dto';
-import { UpdateTravelScheduleDto } from './dto/update-travel-schedule.dto';
-
+import { InjectModel } from '@nestjs/mongoose';
+import { ServiceBase } from 'src/common/bases/service.base';
+import { TravelSchedule } from './travelSchedule.schema';
+import { Model } from 'mongoose';
+import axios from 'axios';
+import { LocationService } from '../location/location.service';
+import { TravelScheduleCreateDto } from './dto/travel-schedule.dto';
 @Injectable()
-export class TravelScheduleService {
-  create(createTravelScheduleDto: CreateTravelScheduleDto) {
-    return 'This action adds a new travelSchedule';
-  }
+export class TravelScheduleService extends ServiceBase<TravelSchedule> {
+    axiosClient: any;
+    constructor(@InjectModel(TravelSchedule.name) private readonly travelScheduleModel: Model<TravelSchedule> , private readonly locationService: LocationService) {
+        super(travelScheduleModel, TravelSchedule)
 
-  findAll() {
-    return `This action returns all travelSchedule`;
-  }
+        this.axiosClient = axios.create({
+            baseURL: process.env.WEATHER_LINK,
+        });
+        this.axiosClient.interceptors.response.use(
+            (response) => {
+                return response?.data;
+            },
+            (error) => {
+                console.log(error);
+                return Promise.reject(error.response.data);
+            },
+        );
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} travelSchedule`;
-  }
 
-  update(id: number, updateTravelScheduleDto: UpdateTravelScheduleDto) {
-    return `This action updates a #${id} travelSchedule`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} travelSchedule`;
-  }
+    async autoCreateTravel(dto: TravelScheduleCreateDto){
+
+        
+
+    }
+
 }

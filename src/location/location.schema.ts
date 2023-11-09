@@ -38,6 +38,10 @@ export class Location extends SchemaBase {
 	@ApiProperty({ example: { latitude: '1', longitude: 1 } })
 	coordinates: coordinates;
 
+	@Prop({ required: true, type: String })
+	@ApiProperty({ example: 'Mo ta' })
+	description: String;
+
 	@Prop({ required: true, type: Types.ObjectId, ref: Province.name })
 	province: Province;
 

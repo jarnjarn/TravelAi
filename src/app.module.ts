@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,7 +10,9 @@ import { ProvinceModule } from './province/province.module';
 import { CategoryModule } from './category/category.module';
 import { SpecialtyModule } from './specialty/specialty.module';
 import { TravelScheduleModule } from './travel-schedule/travel-schedule.module';
+import { TravelDetailModule } from './travel-detail/travel-detail.module';
 
+@Global()
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -49,6 +51,8 @@ import { TravelScheduleModule } from './travel-schedule/travel-schedule.module';
 		SpecialtyModule,
 
 		TravelScheduleModule,
+
+		TravelDetailModule,
 	],
 })
 export class AppModule {}

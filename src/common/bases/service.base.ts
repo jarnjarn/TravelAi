@@ -83,11 +83,12 @@ export class ServiceBase<T extends SchemaBase> implements IService<T> {
 			...query,
 		};
 		const searchs = [];
-		for (const key of KeyOf) {
+		for (const key of KeyOf || []) {
 			searchs.push({
-				[key]: StringUtil.queryLike(pagedto.query),
+			  [key]: StringUtil.queryLike(pagedto.query),
 			});
-		}
+		  }
+		  
 		if (searchs.length > 0) {
 			find = {
 				...find,

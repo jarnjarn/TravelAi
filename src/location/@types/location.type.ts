@@ -1,4 +1,4 @@
 export type coordinates = {
-    latitude: number;
-	longitude: number;
+    latitude: String;
+	longitude: String;
 }
