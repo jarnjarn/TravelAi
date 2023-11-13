@@ -16,10 +16,7 @@ export class AppStart {
 	}
 
 	private static enableCors() {
-		AppStart.app.enableCors({
-			methods: 'GET,PUT,POST,DELETE',
-			origin: '*',
-		});
+		AppStart.app.enableCors();
 		return this;
 	}
 
@@ -41,7 +38,7 @@ export class AppStart {
 					value: true,
 					target: true,
 				},
-				//validateCustomDecorators: true,
+				validateCustomDecorators: true,
 			}),
 		);
 	}
@@ -55,11 +52,11 @@ export class AppStart {
 	}
 
 	private static publicStaticFolder() {
-		if (process.env.STATIC_FOLDER) {
-			// AppStart.app.useStaticAssets(join(process.cwd(), process.env.STATIC_FOLDER), {
-			// 	prefix: '/public/',
-			// });
-		}
+		// if (process.env.STATIC_FOLDER) {
+		// 	AppStart.app.useStaticAssets(join(process.cwd(), process.env.STATIC_FOLDER), {
+		// 		prefix: '/public/',
+		// 	});
+		// }
 	}
 
 	public static enableInterceptor() {

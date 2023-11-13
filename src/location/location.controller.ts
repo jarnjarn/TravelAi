@@ -69,11 +69,5 @@ export class LocationController {
 		return await this.locationService.deleteById(param.id);
 	}
 
-	@Post('/test')
-	@Note('test')
-	async test(@Body() dto : LocationDto) {
-		return await this.locationService.getNearestLocations(dto);
-	}
-
 }
 

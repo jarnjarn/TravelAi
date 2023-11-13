@@ -46,5 +46,11 @@
         "message": "địa điểm không tồn tại",
         "status": 404,
         "isError": true
+    },
+    {
+        "code": "TRAVELSCHEDULE_NOT_FOUND",
+        "message": "LICH TRINH không tồn tại",
+        "status": 404,
+        "isError": true
     }
 ]

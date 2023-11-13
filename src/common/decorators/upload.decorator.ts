@@ -17,6 +17,7 @@ export enum UploadType {
 
 export function Upload(fieldName: string, folder: string, requeired: boolean = true, customName?: (file: FileMulter) => string) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+
 		return applyDecorators(
 			ApiConsumes('multipart/form-data'),
 			UseInterceptors(

@@ -2,23 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { TravelDetailService } from './travel-detail.service';
 import { ApiController } from 'src/common/decorators/apiController.decorator';
 import { Note } from 'src/common/decorators/note.decorator';
-import { createTraVelDetail, weatherDto } from './dto/travel-detail.dto';
+import { ObjectIdDto } from 'src/common/dtos/objectId.dto';
 
 @ApiController('travel-detail')
 export class TravelDetailController {
   constructor(private readonly travelDetailService: TravelDetailService) {}
 
-  // @Post()
-  // @Note('test')
-  // async getWeather(@Body() dto : weatherDto){
-  //   return await this.travelDetailService.getWeather(dto)
-  // }
-
-
-  @Post()
+  @Post('travel/:id')
   @Note('test')
-  async create(@Body() dto : createTraVelDetail){
-    return await this.travelDetailService.createTravelLocation(dto)
+  async test(@Param() param: ObjectIdDto){
+    return await this.travelDetailService.TravelDetail(param.id)
   }
-
 }

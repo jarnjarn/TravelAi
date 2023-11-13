@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { ServiceBase } from 'src/common/bases/service.base';
 import { LocationDto, LocationPagination } from './dto/location.dto';
 import axios from 'axios';
+import { TravelScheduleCreateDto } from 'src/travel-schedule/dto/travel-schedule.dto';
 
 @Injectable()
 export class LocationService extends ServiceBase<Location> {
@@ -59,7 +60,7 @@ export class LocationService extends ServiceBase<Location> {
 		return Location;
 	}
 
-	async getNearestLocations(dto: LocationDto) {
+	async getNearestLocations(dto: TravelScheduleCreateDto) {
 		const locations = await this.getLocationsByCateAndPro(dto.category, dto.province);
 		const reuslt = [];
 		const distances = [];

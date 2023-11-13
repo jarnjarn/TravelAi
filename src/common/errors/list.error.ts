@@ -20,4 +20,5 @@ export class ListException
 	static PROVINCE_NOT_FOUND = fn(HttpStatus.NOT_FOUND,"TỈNH không tồn tại")
 	static CATEGORY_NOT_FOUND = fn(HttpStatus.NOT_FOUND,"DANH MỤC không tồn tại")
 	static LOCATION_NOT_FOUND = fn(HttpStatus.NOT_FOUND,"địa điểm không tồn tại")
+	static TRAVELSCHEDULE_NOT_FOUND = fn(HttpStatus.NOT_FOUND,"LICH TRINH không tồn tại")
 }

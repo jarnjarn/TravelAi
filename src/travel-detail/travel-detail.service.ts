@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { TravelDetail } from './travel-detail.schema';
 import axios from 'axios';
 import { createTraVelDetail, weatherDto } from './dto/travel-detail.dto';
 import { LocationService } from '../location/location.service';
 import { ListException } from 'src/common/errors/list.error';
 import { ServiceBase } from 'src/common/bases/service.base';
+import { LocationDto } from 'src/location/dto/location.dto';
+import { TravelScheduleCreateDto } from 'src/travel-schedule/dto/travel-schedule.dto';
 
 @Injectable()
 export class TravelDetailService extends ServiceBase<TravelDetail>{
@@ -42,27 +44,45 @@ export class TravelDetailService extends ServiceBase<TravelDetail>{
     return { temperature: temp, description, humidity };
   }
 
+  async createTravelLocation(dto: TravelScheduleCreateDto) {
+    const locations = await this.locationService.getNearestLocations(dto);
+    const promises = [];
 
-  async createTravelLocation(dto: createTraVelDetail) {
-    const location = await this.locationService.findById(dto.location).orThrow(ListException.LOCATION_NOT_FOUND)
+    for (const item of locations) {
+      const coordinates = JSON.parse(item.location.coordinates as any);
+      console.log(coordinates.latitude, coordinates.longitude);
+      const promise = this.getWeather(coordinates.latitude, coordinates.longitude)
+        .then((weather) => {
+          const celsiusTemperature = weather.temperature - 273.15;
+          const convertedWeather = {
+            temperature: celsiusTemperature,
+            description: weather.description,
+            humidity: weather.humidity,
+          };
+          return this.travelDetailModel.create({
+            location: item.location,
+            weaTher: convertedWeather,
+          });
+        });
 
-    const { coordinates: { latitude, longitude } } = location
+      promises.push(promise);
+    }
 
-    const weather = await this.getWeather(latitude, longitude);
+    const results = await Promise.all(promises);
 
-    const celsiusTemperature = weather.temperature - 273.15;
-
-    const convertedWeather = {
-      temperature: celsiusTemperature,
-      description: weather.description,
-      humidity: weather.humidity,
-    };
-
-    return await this.create({
-      location: location,
-      weaTher: convertedWeather
-    });
+    return results;
   }
 
+  async TravelDetail(id: string | Types.ObjectId) {
+    const location = await this.locationService.findById(id).orThrow(ListException.LOCATION_NOT_FOUND)
+    const coordinates = JSON.parse(location.coordinates as any);
+    const weather = await this.getWeather(coordinates.latitude, coordinates.longitude)
+    return this.travelDetailModel.create(
+      {
+        location: location,
+        weaTher: weather
+      }
+    )
+  }
 }
 
