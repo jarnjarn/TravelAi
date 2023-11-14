@@ -42,17 +42,9 @@ import { join } from 'path';
 			authToken: process.env.TWILIO_AUTH_TOKEN,
 		}),
 		ServeStaticModule.forRoot({
-			serveRoot: '/location/',
-			rootPath: join(__dirname, '/uploads/Location'),
-			exclude: ['/api*']
+			rootPath: join(__dirname, '..', 'uploads'),
+			serveRoot: '/uploads',
 		}),
-		ServeStaticModule.forRoot({
-			serveRoot: '/specialty/',
-			rootPath: join(__dirname, '/uploads/Specialty'),
-		}),
-
-
-
 		UserModule,
 
 		LocationModule,

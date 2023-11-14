@@ -8,9 +8,4 @@ import { ObjectIdDto } from 'src/common/dtos/objectId.dto';
 export class TravelDetailController {
   constructor(private readonly travelDetailService: TravelDetailService) {}
 
-  @Post('travel/:id')
-  @Note('test')
-  async test(@Param() param: ObjectIdDto){
-    return await this.travelDetailService.TravelDetail(param.id)
-  }
 }

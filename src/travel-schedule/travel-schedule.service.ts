@@ -5,7 +5,7 @@ import { TravelSchedule } from './travelSchedule.schema';
 import { Model, Types } from 'mongoose';
 import axios from 'axios';
 import { LocationService } from '../location/location.service';
-import { TravelScheduleCreateDto, TravelScheduleUpdateDto } from './dto/travel-schedule.dto';
+import { StatusUpdateDto, TimeUpdateDto, TravelScheduleCreateDto, TravelScheduleUpdateDto } from './dto/travel-schedule.dto';
 import { TravelDetailService } from '../travel-detail/travel-detail.service';
 import { ListException } from 'src/common/errors/list.error';
 import { ObjectIdDto } from 'src/common/dtos/objectId.dto';
@@ -78,20 +78,41 @@ export class TravelScheduleService extends ServiceBase<TravelSchedule> {
 		if (locationExists) {
 			throw new HttpException('Địa điểm này đã tồn tại', HttpStatus.BAD_REQUEST);
 		}
-
+	
 		const location = await this.travelDetailService.TravelDetail(dto.location);
-
-		travel.locationTravel.push(location); 
-		console.log(travel)
-		await travel.save(); 
+		travel.locationTravel = [...travel.locationTravel,...location]
+		await travel.save();
 		return travel; 
 	}
 	
+	
 
-	async updateTravel(id: string | Types.ObjectId, dto: TravelScheduleUpdateDto) {
+	async updateAddTravel(id: string | Types.ObjectId, dto: TravelScheduleUpdateDto) {
 		const travel = await this.findById(id).orThrow(ListException.TRAVELSCHEDULE_NOT_FOUND)
 		const test = await this.addLocation(id, dto)
 		return test
 	}
+	async updateRemoveTravel(id: string | Types.ObjectId, dto: TravelScheduleUpdateDto) {
+		const travel = await this.findById(id).orThrow(ListException.TRAVELSCHEDULE_NOT_FOUND)
+		const test = await this.deleteLocation(id, dto)
+		return test
+	}
+
+	async updatetimeTravel(id: string | Types.ObjectId, dto: TimeUpdateDto) {
+		const travel = await this.findById(id).orThrow(ListException.TRAVELSCHEDULE_NOT_FOUND)
+		travel.dayStart = dto.dayStart
+		travel.dayEnd = dto.dayEnd
+		await travel.save()
+		return travel;
+	}
+
+	async updateStatusTravel(id: string | Types.ObjectId, dto: StatusUpdateDto) {
+		const travel = await this.findById(id).orThrow(ListException.TRAVELSCHEDULE_NOT_FOUND)
+		console.log(dto.status)
+		travel.status = dto.status
+		await travel.save()
+		return travel;
+	}
+	
 }
 

@@ -74,15 +74,29 @@ export class TravelDetailService extends ServiceBase<TravelDetail>{
   }
 
   async TravelDetail(id: string | Types.ObjectId) {
-    const location = await this.locationService.findById(id).orThrow(ListException.LOCATION_NOT_FOUND)
+    const promises = [];
+    const location = await this.locationService.findById(id).orThrow(ListException.LOCATION_NOT_FOUND);
     const coordinates = JSON.parse(location.coordinates as any);
-    const weather = await this.getWeather(coordinates.latitude, coordinates.longitude)
-    return this.travelDetailModel.create(
-      {
-        location: location,
-        weaTher: weather
-      }
-    )
+    console.log(coordinates.latitude, coordinates.longitude);
+    const promise = this.getWeather(coordinates.latitude, coordinates.longitude)
+      .then((weather) => {
+        const celsiusTemperature = weather.temperature - 273.15;
+        const convertedWeather = {
+          temperature: celsiusTemperature,
+          description: weather.description,
+          humidity: weather.humidity,
+        };
+        return this.travelDetailModel.create({
+          location: location,
+          weaTher: convertedWeather,
+        });
+      });
+
+    promises.push(promise);
+    const results = await Promise.all(promises);
+
+    return results;
   }
+
 }
 
